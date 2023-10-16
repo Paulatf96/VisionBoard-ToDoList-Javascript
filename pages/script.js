@@ -12,6 +12,8 @@ if (saveInitId) {
 let currentGoal = {};
 let currentTask = {};
 let currentAim = {};
+let tasks = [];
+let saveTasks = localStorage.getItem("saveTasks");
 let aimsMonth = [];
 let goals = [];
 let saveGoals = localStorage.getItem("save");
@@ -20,16 +22,14 @@ if (saveGoals && JSON.parse(saveGoals).length) {
   goals = JSON.parse(saveGoals);
   print(goals);
 }
+
+if (saveTasks && JSON.parse(saveTasks).length) {
+  tasks = JSON.parse(saveTasks);
+}
 let saveAimss = localStorage.getItem("saveAims");
 if (saveAimss && JSON.parse(saveAimss).length) {
   aimsMonth = JSON.parse(saveAimss);
 }
-/* let tasks = [];
-let saveTasks = localStorage.getItem("saveTasks");
-if (saveTasks && saveTask.length > 0) {
-  tasks = JSON.parse(saveTasks);
-  printTask(tasks, true) ;
-} */
 
 // Obtener inputs de goals
 let textGoal = document
@@ -97,7 +97,8 @@ function recorrer(e, inputsCategories, validation) {
         currentGoal["tittle"] = input.defaultValue;
         currentGoal["category"] = input.id;
         saveGoal();
-      } }
+      }
+    }
   });
 }
 
@@ -144,10 +145,8 @@ document
       .addEventListener("change", function (option) {
         currentAim["aimsValue"] = this.value;
         currentAim["vision"] = currentGoal["valueVision"];
-        console.log(currentAim["aimsValue"]);
         if (currentAim["month"] && currentAim["aimsValue"]) {
           aimsMonth.push(currentAim);
-          console.log(aimsMonth);
           currentAim = {};
         }
       });
@@ -226,8 +225,6 @@ function print(array) {
 function initFiltro() {
   const filtro = document.getElementById("floatingSelect");
   filtro.addEventListener("change", function (option) {
-    console.log(option.target.value);
-
     if (option.target.value == "todos") {
       print(goals);
     } else {
@@ -267,7 +264,6 @@ function printMonths(months) {
   }
 }
 function saveInLocalStorage(array, name) {
-  console.log(array)
   let saveInfo = JSON.stringify(array);
   localStorage.setItem(name, saveInfo);
 }
@@ -277,9 +273,8 @@ function seeMonth(e) {
   container.innerHTML = "";
   let id = e.target.id;
   let div = document.createElement("div");
-  div.className = "aims";
   div.innerHTML = ` 
-  <div class="headerGoals"> 
+  <div id=aims><div class="headerGoals"> 
     <h3>Objetivos para este mes</h3>
     <!-- modal -->
     <button type="button" class="btn btn-primary"  data-bs-toggle="modal"  data-bs-target="#exampleModal1" id="createAims">Crear Objetivo</button>
@@ -320,47 +315,50 @@ function seeMonth(e) {
       <div id="goalsInProcess"></div>
     </div>
   </div>
+  </div>
 
   <div id="tasks">
     <div class="cardWeek">
       <div class="cardTitle">
         <h5>Semana 1</h5>
-        <button>+</button>
-      </div>
-      <div id="semana1"></div>
+        <button id="1" class="buttonTaks">+</button>
+        </div>
+        <div id="semanaTask1"></div>
+        <div id="semana1"></div>
     </div>
     <div class="cardWeek">
       <div class="cardTitle">
         <h5>Semana 2</h5>
-        <button>+</button>
+        <button id="2" class="buttonTaks">+</button>
       </div>
+      <div id="semanaTask2"></div>
       <div id="semana2"></div>
     </div>
     <div class="cardWeek">
       <div class="cardTitle">
         <h5>Semana 3</h5>
-        <button>+</button>
+        <button id="3" class="buttonTaks">+</button>
       </div>
+      <div id="semanaTask3"></div>
       <div id="semana3"></div>
-      
     </div>
     <div class="cardWeek">
       <div class="cardTitle">
         <h5>Semana 4</h5>
-        <button>+</button>
+        <button id="4" class="buttonTaks">+</button>
       </div>
+      <div id="semanaTask4"></div>
       <div id="semana4"></div>
-      
     </div>
  `;
   container.appendChild(div);
   let aimsContainer = document.getElementById("aimsOfMonth");
-  console.log(id)
   let aimsFilter = aimsMonth.filter((aim) => aim["month"] == id);
-  console.log(aimsFilter)
   if (aimsFilter.length > 0) {
     for (let aim of aimsFilter) {
-      aimsContainer.innerHTML += `<li>${aim.aimsValue} - (${aim.vision ? aim.vision : aim.category})</li>`;
+      aimsContainer.innerHTML += `<li>${aim.aimsValue} - (${
+        aim.vision ? aim.vision : aim.category
+      })</li>`;
     }
   } else {
     aimsContainer.innerHTML =
@@ -374,30 +372,83 @@ function seeMonth(e) {
       currentAim["aimsValue"] = this.value;
     });
 
-   let categoryAim = document.getElementById("categorySelect");
-   categoryAim.addEventListener("change", function (option) {
-      console.log(option.target.value);
-      currentAim["category"]= option.target.value
-    });
-  let saveAim = document
-    .getElementById("saveAim")
-    .addEventListener("click", function(){
-      if (
-        currentAim["category"]&&
-        currentAim["aimsValue"]
-      ) {
-        aimsMonth.push(currentAim);
-        console.log(currentAim);
-        saveInLocalStorage(aimsMonth, "saveAims");
-        console.log(aimsMonth);
-        currentAim = [];
-        seeMonth(e)
-      } else {
-        Swal.fire({
-          icon: "info",
-          title: "Oops...",
-          text: "Aún te faltan datos!",
+  let categoryAim = document.getElementById("categorySelect");
+  categoryAim.addEventListener("change", function (option) {
+    currentAim["category"] = option.target.value;
+  });
+  document.getElementById("saveAim").addEventListener("click", function () {
+    if (currentAim["category"] && currentAim["aimsValue"]) {
+      aimsMonth.push(currentAim);
+      saveInLocalStorage(aimsMonth, "saveAims");
+      currentAim = [];
+      seeMonth(e);
+    } else {
+      Swal.fire({
+        icon: "info",
+        title: "Oops...",
+        text: "Aún te faltan datos!",
+      });
+    }
+  });
+
+  let buttonsTask = document.getElementsByClassName("buttonTaks");
+
+  for (let i = 0; i < buttonsTask.length; i++) {
+    buttonsTask[i].addEventListener("click", function () {
+      let addTaskContainer = document.getElementById(
+        `${"semanaTask" + (i + 1)}`
+      );
+      let divTask = document.createElement("div");
+      divTask.innerHTML = `<input type="text" id="task-${
+        tasks.length || 0
+      }" class="tasks" 
+    value="" placeholder="Escribe tu tarea"/>`;
+      addTaskContainer.appendChild(divTask);
+      document
+        .getElementById(`task-${tasks.length || 0}`)
+        .addEventListener("change", function () {
+          currentTask["month"] = id;
+          currentTask["week"] = `${"semana" + (i + 1)}`;
+          currentTask["taskValue"] = this.value;
+          tasks.push(currentTask);
+          currentTask = {};
+          addTaskContainer.innerHTML = "";
+          saveInLocalStorage(tasks, "saveTasks");
+          printTask(id)
         });
-      }
-    });
+      });
+    }
+    printTask(id)
+}
+
+function printTask(id) {
+  let containerTask1 = document.getElementById("semana1");
+  containerTask1.innerHTML=""
+  let containerTask2 = document.getElementById("semana2");
+  containerTask2.innerHTML=""
+  let containerTask3 = document.getElementById("semana3");
+  containerTask3.innerHTML=""
+  let containerTask4 = document.getElementById("semana4");
+  containerTask4.innerHTML=""
+  let taskMonthFilter = tasks.filter((task) => task.month == id);
+  taskMonthFilter.forEach(function (task) {
+    switch (task.week) {
+      case "semana1":
+        containerTask1.innerHTML += `<div class="listTaks"><li>${task.taskValue}</li>
+      <input id="${task.taskValue}" class="checkTask" type="checkbox"/> </div>`;
+        break;
+      case "semana2":
+        containerTask2.innerHTML += `<div class="listTaks"><li>${task.taskValue}</li>
+      <input id="${task.taskValue}" class="checkTask" type="checkbox"/> </div>`
+        break;
+      case "semana3":
+        containerTask3.innerHTML += `<div class="listTaks"><li>${task.taskValue}</li>
+      <input id="${task.taskValue}" class="checkTask" type="checkbox"/> </div>`
+        break;
+      default:
+        containerTask4.innerHTML += `<div class="listTaks"><li>${task.taskValue}</li>
+      <input id="${task.taskValue}" class="checkTask" type="checkbox"/> </div>`
+        break;
+    }
+  });
 }

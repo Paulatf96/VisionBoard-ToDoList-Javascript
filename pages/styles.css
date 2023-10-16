@@ -21,7 +21,6 @@ header{
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding-left: 20px;
 }
 
 header img, header#headerLogo button{
@@ -39,7 +38,12 @@ h2{
 h3, h5, h6{
     color:#17c2e0;
     font-weight: bolder;
-    margin: 20px;
+    margin: 5px 20px 5px 0px;
+}
+
+body div #carouselExampleSlidesOnly{
+    width: 50%;
+    margin-left: 20%;
 }
 #board > h3, #plannerBoard > h3{
     text-align: center;
@@ -54,7 +58,7 @@ h3, h5, h6{
     align-items: end;
     justify-content: center;
 }
-#createGoal, #createAims, #button-collapse, #deleteVisionBoard, #buttonDelete, #aboutButton,#saveGoal,#saveAim, .cardWeek button, #addAims-goalsForm{
+#createGoal, #createAims, #button-collapse, #deleteVisionBoard, #buttonDelete, #aboutButton,#saveGoal,#saveAim, .cardWeek button, #addAims-goalsForm, #aboutButton{
     background-color:#17c2e0;
     font-weight: 800;
     border-radius: 10px;
@@ -105,7 +109,7 @@ h3, h5, h6{
     width: 80px;
     font-size: 12px;
 }
-.headerGoals input, #aimsForm input{
+.headerGoals input, #aimsForm input, #semanaTask1 input, #semanaTask2 input, #semanaTask3 input, #semanaTask4 input{
         width: 100%;
         border: none;
         border-bottom: 1px solid #ccc; 
@@ -136,10 +140,11 @@ div .container-inputs{
 }
 .cardWeek{
     display: flex;
+    flex-direction: column;
     width: 100%;
-    align-items: center;
     border-radius: 10px;
-    height: 100px;
+    height: fit-content;
+    padding: 5px;
 }
 #exampleModal > div > div > div.modal-body > div.goalsForm{
     display: flex;
@@ -174,4 +179,17 @@ div .container-inputs{
 }
 #sideBar{
     border-left: 0.5px solid rgb(218, 215, 215);
+}
+
+#semana1 .listTaks, #semana2 .listTaks, #semana3 .listTaks, #semana4 .listTaks{
+    display: flex;
+    padding-right: 4.3%;
+    padding-left: 4.3%;
+    
+}
+
+.listTaks li{
+    color: rgb(90, 89, 89);
+    flex: 1;
+    flex-wrap: wrap;
 }
