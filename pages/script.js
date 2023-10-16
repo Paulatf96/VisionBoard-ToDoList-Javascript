@@ -71,22 +71,6 @@ for (const input of inputsCategories) {
 let saveButon = document
   .getElementById("saveGoal")
   .addEventListener("click", (e) => recorrer(e, inputsCategories, true));
-// obtener valores de input de planner
-/* let textTask = document
-  .getElementById("valueTask")
-  .addEventListener("change", function () {
-    currentTask["valueTask"] = this.value;
-  });
-
-let inputsCategoriesT = document.querySelectorAll(".categoriaT");
-
-for (const input of inputsCategoriesT) {
-  input.addEventListener("click", {});
-}
-
-let saveButonTask = document
-  .getElementById("saveTask")
-  .addEventListener("click", (e) => recorrer(e, inputsCategoriesT, false)); */
 
 //Función que recorre los input de las categorias  para tomar el valor y se va a la función save ya sea de goal o de task
 function recorrer(e, inputsCategories, validation) {
@@ -151,7 +135,7 @@ document
         }
       });
   });
-
+//Guarda metas
 function saveGoal() {
   if (
     currentGoal["valueVision"] &&
@@ -174,7 +158,7 @@ function saveGoal() {
   containerCreateAims.innerHTML += "";
   saveInLocalStorage(aimsMonth, "saveAims");
 }
-
+//Imprime tarjeta de metas
 function print(array) {
   let board = document.getElementById("board");
   board.innerHTML = "";
@@ -221,7 +205,7 @@ function print(array) {
   document.getElementById("goalsForm").reset();
   initFiltro();
 }
-
+//Crea filtro y agrega evento
 function initFiltro() {
   const filtro = document.getElementById("floatingSelect");
   filtro.addEventListener("change", function (option) {
@@ -248,7 +232,7 @@ function deleteBoard() {
   saveInLocalStorage(goals, "save");
   saveInLocalStorage(aimsMonth, "saveAims");
 }
-
+// Obtiene con fetch el JSON de meses y lo imprime en pantalla
 function printMonths(months) {
   let container = document.getElementById("months");
   for (let i = 0; i < months.length; i++) {
@@ -267,7 +251,7 @@ function saveInLocalStorage(array, name) {
   let saveInfo = JSON.stringify(array);
   localStorage.setItem(name, saveInfo);
 }
-
+//Imprime barra lateral según el mes seleccionado
 function seeMonth(e) {
   let container = document.getElementById("sideBar");
   container.innerHTML = "";
@@ -414,22 +398,22 @@ function seeMonth(e) {
           currentTask = {};
           addTaskContainer.innerHTML = "";
           saveInLocalStorage(tasks, "saveTasks");
-          printTask(id)
+          printTask(id);
         });
-      });
-    }
-    printTask(id)
+    });
+  }
+  printTask(id);
 }
 
 function printTask(id) {
   let containerTask1 = document.getElementById("semana1");
-  containerTask1.innerHTML=""
+  containerTask1.innerHTML = "";
   let containerTask2 = document.getElementById("semana2");
-  containerTask2.innerHTML=""
+  containerTask2.innerHTML = "";
   let containerTask3 = document.getElementById("semana3");
-  containerTask3.innerHTML=""
+  containerTask3.innerHTML = "";
   let containerTask4 = document.getElementById("semana4");
-  containerTask4.innerHTML=""
+  containerTask4.innerHTML = "";
   let taskMonthFilter = tasks.filter((task) => task.month == id);
   taskMonthFilter.forEach(function (task) {
     switch (task.week) {
@@ -439,15 +423,15 @@ function printTask(id) {
         break;
       case "semana2":
         containerTask2.innerHTML += `<div class="listTaks"><li>${task.taskValue}</li>
-      <input id="${task.taskValue}" class="checkTask" type="checkbox"/> </div>`
+      <input id="${task.taskValue}" class="checkTask" type="checkbox"/> </div>`;
         break;
       case "semana3":
         containerTask3.innerHTML += `<div class="listTaks"><li>${task.taskValue}</li>
-      <input id="${task.taskValue}" class="checkTask" type="checkbox"/> </div>`
+      <input id="${task.taskValue}" class="checkTask" type="checkbox"/> </div>`;
         break;
       default:
         containerTask4.innerHTML += `<div class="listTaks"><li>${task.taskValue}</li>
-      <input id="${task.taskValue}" class="checkTask" type="checkbox"/> </div>`
+      <input id="${task.taskValue}" class="checkTask" type="checkbox"/> </div>`;
         break;
     }
   });
