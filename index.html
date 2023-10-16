@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Imparable</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://kit.fontawesome.com/291f37f473.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Concert+One&family=Montserrat:wght@300&family=Poppins:ital,wght@1,300&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./pages/styles.css"/>
+  </head>
+  <body class="container-fluid">
+    <header>
+      <div class="headerGoals" class="col-6">
+      <h2>Tus metas</h2>
+          <!-- inicio modal -->
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            id="createGoal"
+          >
+            Crear Meta
+          </button>
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">
+                    Crear meta
+                  </h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <form class="goalsForm" id="goalsForm">
+                    <label for="valueVision"
+                      >Ingresa una palabra que describa tu meta</label
+                    >
+                    <input
+                      type="text"
+                      id="valueVision"
+                      value=""
+                      placeholder="Viajar a mi destino soñado"
+                    />
+
+                    <label for="imgVision">Ingresa la URL de la imagen </label>
+                    <input
+                      type="text"
+                      id="imgVision"
+                      value=""
+                      placeholder="https://google/imagen.com"
+                      pattern="https?://.+"
+                      required
+                    />
+                    <label for="start">Asigna un plazo para tu meta</label>
+                    <input type="date" id="dateVision" />
+                  </form>
+                  <div class="row container-inputs">
+                    <p>Selecciona la categoría a la que pertenece tu meta</p>
+                    <input
+                      class="categoria"
+                      type="radio"
+                      name="categoria"
+                      value="Crecimiento"
+                      id="crecimientoPersonal"
+                      required
+                    />
+                    <label
+                      for="crecimientoPersonal"
+                      class="label-category"
+                    >
+                      <p>Crecimiento</p>
+                      <img
+                        src="./media/crecimiento.png"
+                        alt="Crecimiento personal"
+                      />
+                    </label>
+
+                    <input
+                      class="categoria"
+                      type="radio"
+                      name="categoria"
+                      value="Economía"
+                      id="economia"
+                      required
+                    />
+                    <label for="economia" class="label-category">
+                      <p>Economía</p>
+                      <img src="./media/económico.png" alt="Economia" />
+                    </label>
+
+                    <input
+                      class="categoria"
+                      type="radio"
+                      name="categoria"
+                      value="Laboral"
+                      id="laboral"
+                      required
+                    />
+                    <label for="laboral" class="label-category">
+                      <p>Laboral</p>
+                      <img src="./media/laboral.png" alt="laboral" />
+                    </label>
+
+                    <input
+                      class="categoria"
+                      type="radio"
+                      name="categoria"
+                      value="Social"
+                      id="social"
+                      required
+                    />
+                    <label class="label-category" for="social">
+                      <p>Social</p>
+                      <img src="./media/social.png" alt="Social" />
+                    </label>
+                  </div>
+                  <div class="goalsForm" >
+                    <label>Agrega objetivos mensuales (opt)</label>
+                    <button id="addAims-goalsForm">+</button>
+                  </div>
+                    <div id="aims-goals-form"></div>
+
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <div class="container-button">
+                    <button type="button" id="saveGoal" class="btn btn-primary" data-bs-dismiss="modal">
+                      Guardar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="headerLogo" class="col-6">
+      <img src="../media/LOGOFONDOBLANCO.png" alt="logo imparable" />
+      <a href="./pages/about.html"><button class="btn btn-primary" id="aboutButton" >About</button></a>
+    </div>
+    </header>
+    <main class="row">
+      <div class="col-7">
+        <div id="goals">
+          
+          <div id="board" class="card-group row">
+            <p style="padding: 40px; text-align: center">
+              Aún no has ingresado metas
+            </p>
+          </div>
+        </div>
+        <div id="months" class="row d-flex justify-content-center">
+
+      </div>
+    </div>
+      <div id="sideBar" class="col-5">
+        <p>Selecciona un mes para ver tu Planner</p>
+       
+      </div>
+    </main>
+    <script src="./pages/script.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </body>
+</html>
