@@ -229,8 +229,10 @@ function deleteBoard() {
   board.innerHTML = "";
   goals = [];
   aimsMonth = [];
+  tasks = [];
   saveInLocalStorage(goals, "save");
   saveInLocalStorage(aimsMonth, "saveAims");
+  saveInLocalStorage(tasks, "saveTasks");
 }
 // Obtiene con fetch el JSON de meses y lo imprime en pantalla
 function printMonths(months) {
