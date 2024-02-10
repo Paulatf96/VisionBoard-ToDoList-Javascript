@@ -1,76 +1,84 @@
-fetch("./info.json")
-  .then((respuesta) => respuesta.json())
-  .then((months) => printMonths(months))
-  .catch((err) => console.log("ERROR", err));
+const validationLocalStorage = (data, nameData) => {
+  let savedInfo = localStorage.getItem(nameData);
+  if (savedInfo && JSON.parse(savedInfo).length) {
+    return (data = JSON.parse(savedInfo));
+  }
+};
 
 let today = new Date();
-let initId = 0;
-let saveInitId = localStorage.getItem("id");
-if (saveInitId) {
-  initId = JSON.parse(saveInitId);
-}
 let currentGoal = {};
 let currentTask = {};
 let currentAim = {};
-let tasks = [];
-let saveTasks = localStorage.getItem("saveTasks");
-let aimsMonth = [];
-let goals = [];
-let saveGoals = localStorage.getItem("save");
+let initId = validationLocalStorage(0, "id") || 0;
+let tasks = validationLocalStorage([], "saveTasks") || [];
+let aimsMonth = validationLocalStorage([], "saveAims") || [];
+let goals = validationLocalStorage([], "save") || [];
 
-if (saveGoals && JSON.parse(saveGoals).length) {
-  goals = JSON.parse(saveGoals);
+if (goals.length) {
   print(goals);
 }
 
-if (saveTasks && JSON.parse(saveTasks).length) {
-  tasks = JSON.parse(saveTasks);
-}
-let saveAimss = localStorage.getItem("saveAims");
-if (saveAimss && JSON.parse(saveAimss).length) {
-  aimsMonth = JSON.parse(saveAimss);
-}
+const initialize = () => {
+  getMonts();
+  getInputsGoals();
+};
 
-// Obtener inputs de goals
-let textGoal = document
-  .getElementById("valueVision")
-  .addEventListener("change", function () {
-    currentGoal["valueVision"] = this.value;
-  });
-let imgGoal = document
-  .getElementById("imgVision")
-  .addEventListener("change", function () {
-    imgGoal = this.value;
+const getMonts = () => {
+  try {
+    fetch("/src/models/info.json")
+      .then((respuesta) => respuesta.json())
+      .then((months) => printMonths(months));
+  } catch (error) {
+    console.log("Error cargando info", error);
+  }
+};
 
-    let urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?$/;
+const getInputsGoals = () => {
+  let textGoal = document
+    .getElementById("valueVision")
+    .addEventListener("change", function () {
+      currentGoal["valueVision"] = this.value;
+    });
+  let imgGoal = document
+    .getElementById("imgVision")
+    .addEventListener("change", function () {
+      imgGoal = this.value;
+      validateURL(imgGoal);
+    });
 
-    // validar URL de goals
-    if (urlPattern.test(imgGoal)) {
-      currentGoal["imgVision"] = this.value;
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "No es una URL válida para tu imagen, ingrésala nuevamente!",
-      });
-    }
-  });
+  let dateGoal = document
+    .getElementById("dateVision")
+    .addEventListener("input", function () {
+      currentGoal["dateGoal"] = this.value;
+    });
 
-let dateGoal = document
-  .getElementById("dateVision")
-  .addEventListener("input", function () {
-    currentGoal["dateGoal"] = this.value;
-  });
+  let inputsCategories = document.querySelectorAll(".categoria");
 
-let inputsCategories = document.querySelectorAll(".categoria");
+  for (const input of inputsCategories) {
+    input.addEventListener("click", {});
+  }
 
-for (const input of inputsCategories) {
-  input.addEventListener("click", {});
-}
+  let saveButon = document
+    .getElementById("saveGoal")
+    .addEventListener("click", (e) => recorrer(e, inputsCategories, true));
 
-let saveButon = document
-  .getElementById("saveGoal")
-  .addEventListener("click", (e) => recorrer(e, inputsCategories, true));
+  let addButon = document
+    .getElementById("addAims-goalsForm")
+    .addEventListener("click", () => drawInputsAddAims());
+};
+
+const validateURL = (imgGoal) => {
+  let urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?$/;
+  if (urlPattern.test(imgGoal)) {
+    currentGoal["imgVision"] = imgGoal;
+  } else {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: "No es una URL válida para tu imagen, ingrésala nuevamente!",
+    });
+  }
+};
 
 //Función que recorre los input de las categorias  para tomar el valor y se va a la función save ya sea de goal o de task
 function recorrer(e, inputsCategories, validation) {
@@ -86,12 +94,10 @@ function recorrer(e, inputsCategories, validation) {
   });
 }
 
-document
-  .getElementById("addAims-goalsForm")
-  .addEventListener("click", function () {
-    let containerCreateAims = document.getElementById("aims-goals-form");
-    let divAims = document.createElement("div");
-    divAims.innerHTML = `<select
+const drawInputsAddAims = () => {
+  let containerCreateAims = document.getElementById("aims-goals-form");
+  let divAims = document.createElement("div");
+  divAims.innerHTML = `<select
   class="form-select monthSelect"
   id="monthSelect-${aimsMonth.length || 0}"
   aria-label="Floating label select example"
@@ -112,29 +118,29 @@ document
 </select>
 <label for="aim">Objetivo para este mes</label>
 <input type="text" id="aim-${
-      aimsMonth.length || 0
-    }" class="aim" value="" placeholder="4 horas semanales de inglés" disabled/>`;
-    containerCreateAims.appendChild(divAims);
+    aimsMonth.length || 0
+  }" class="aim" value="" placeholder="4 horas semanales de inglés" disabled/>`;
+  containerCreateAims.appendChild(divAims);
 
-    document
-      .getElementById(`monthSelect-${aimsMonth.length || 0}`)
-      .addEventListener("change", function (option) {
-        currentAim["month"] = this.value;
-        document.getElementById(
-          `aim-${aimsMonth.length || 0}`
-        ).disabled = false;
-      });
-    document
-      .getElementById(`aim-${aimsMonth.length || 0}`)
-      .addEventListener("change", function (option) {
-        currentAim["aimsValue"] = this.value;
-        currentAim["vision"] = currentGoal["valueVision"];
-        if (currentAim["month"] && currentAim["aimsValue"]) {
-          aimsMonth.push(currentAim);
-          currentAim = {};
-        }
-      });
-  });
+  document
+    .getElementById(`monthSelect-${aimsMonth.length || 0}`)
+    .addEventListener("change", function (option) {
+      currentAim["month"] = this.value;
+      document.getElementById(`aim-${aimsMonth.length || 0}`).disabled = false;
+    });
+
+  document
+    .getElementById(`aim-${aimsMonth.length || 0}`)
+    .addEventListener("change", function (option) {
+      currentAim["aimsValue"] = this.value;
+      currentAim["vision"] = currentGoal["valueVision"];
+      if (currentAim["month"] && currentAim["aimsValue"]) {
+        aimsMonth.push(currentAim);
+        currentAim = {};
+      }
+    });
+};
+
 //Guarda metas
 function saveGoal() {
   if (
@@ -180,7 +186,7 @@ function print(array) {
   </div>`;
   board.appendChild(boxTitle);
 
-  array.forEach(function (elemento) {
+  array.forEach((elemento) => {
     let box = document.createElement("div");
     box.id = "boxGoals";
     box.className = "col";
@@ -338,6 +344,7 @@ function seeMonth(e) {
     </div>
  `;
   container.appendChild(div);
+
   let aimsContainer = document.getElementById("aimsOfMonth");
   let aimsFilter = aimsMonth.filter((aim) => aim["month"] == id);
   if (aimsFilter.length > 0) {
@@ -351,6 +358,12 @@ function seeMonth(e) {
       "<p>Este mes no tienes objetivos propuestos pero tienes metas por cumplir </p>";
   }
 
+  initInputsCreateAim(id, e);
+  initButtonSaveTask(id);
+  printTask(id);
+}
+
+const initInputsCreateAim = (id, e) => {
   document
     .getElementById("valueAims")
     .addEventListener("change", function (option) {
@@ -376,7 +389,9 @@ function seeMonth(e) {
       });
     }
   });
+};
 
+const initButtonSaveTask = (id) => {
   let buttonsTask = document.getElementsByClassName("buttonTaks");
 
   for (let i = 0; i < buttonsTask.length; i++) {
@@ -404,8 +419,7 @@ function seeMonth(e) {
         });
     });
   }
-  printTask(id);
-}
+};
 
 function printTask(id) {
   let containerTask1 = document.getElementById("semana1");
@@ -438,3 +452,5 @@ function printTask(id) {
     }
   });
 }
+
+initialize();
