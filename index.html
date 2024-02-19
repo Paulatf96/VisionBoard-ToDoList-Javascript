@@ -25,28 +25,37 @@
   <body class="container-fluid">
     <header>
       <div class="headerGoals" class="col-6">
-        <h2>Tus metas</h2>
+        <h2>Vision Board</h2>
+        <button id="createBoard">Crear tablero</button>
+        <div id="boardTemplate" class="board-template">
+          <div class="template" >
+            <img class="imgTemplate" id="template1" src="/src/public/assets/modelo1.png" alt="Mosaico 1">
+          </div>
+          <div class="template" >
+            <img class="imgTemplate" id="template2" src="/src/public/assets/modelo2.png" alt="Mosaico 2">
+          </div>
+        </div>
         <!-- inicio modal -->
-        <button
+<!--         <button
           type="button"
           class="btn btn-primary"
           data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
+          data-bs-target="#create"
           id="createGoal"
         >
-          Crear Meta
-        </button>
+          +
+        </button> -->
         <div
           class="modal fade"
-          id="exampleModal"
+          id="create"
           tabindex="-1"
-          aria-labelledby="exampleModalLabel"
+          aria-labelledby="createModalLabel"
           aria-hidden="true"
         >
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">
+                <h1 class="modal-title fs-5" id="createModalLabel">
                   Crear meta
                 </h1>
                 <button
@@ -108,7 +117,10 @@
                   />
                   <label for="economia" class="label-category">
                     <p>Economía</p>
-                    <img src="/src/public/assets/económico.png" alt="Economia" />
+                    <img
+                      src="/src/public/assets/económico.png"
+                      alt="Economia"
+                    />
                   </label>
 
                   <input
@@ -167,7 +179,10 @@
         </div>
       </div>
       <div id="headerLogo" class="col-6">
-        <img src="./src/public/assets/LOGOFONDOBLANCO.png" alt="logo imparable" />
+        <img
+          src="./src/public/assets/LOGOFONDOBLANCO.png"
+          alt="logo imparable"
+        />
         <a href="./src/pages/about.html"
           ><button class="btn btn-primary" id="aboutButton">About</button></a
         >

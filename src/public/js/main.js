@@ -1,7 +1,7 @@
-const validationLocalStorage = (data, nameData) => {
+const validationLocalStorage = (nameData) => {
   let savedInfo = localStorage.getItem(nameData);
   if (savedInfo && JSON.parse(savedInfo).length) {
-    return (data = JSON.parse(savedInfo));
+    return JSON.parse(savedInfo);
   }
 };
 
@@ -9,10 +9,10 @@ let today = new Date();
 let currentGoal = {};
 let currentTask = {};
 let currentAim = {};
-let initId = validationLocalStorage(0, "id") || 0;
-let tasks = validationLocalStorage([], "saveTasks") || [];
-let aimsMonth = validationLocalStorage([], "saveAims") || [];
-let goals = validationLocalStorage([], "save") || [];
+let initId = validationLocalStorage("id") || 0;
+let tasks = validationLocalStorage("saveTasks") || [];
+let aimsMonth = validationLocalStorage("saveAims") || [];
+let goals = validationLocalStorage("save") || [];
 
 if (goals.length) {
   print(goals);
@@ -21,6 +21,7 @@ if (goals.length) {
 const initialize = () => {
   getMonts();
   getInputsGoals();
+  createBoard();
 };
 
 const getMonts = () => {
@@ -147,7 +148,8 @@ function saveGoal() {
     currentGoal["valueVision"] &&
     currentGoal["imgVision"] &&
     currentGoal["category"] &&
-    currentGoal["dateGoal"]
+    currentGoal["dateGoal"] &&
+    goals.length < 7
   ) {
     goals.push(currentGoal);
     currentGoal = {};
@@ -155,7 +157,7 @@ function saveGoal() {
     Swal.fire({
       icon: "error",
       title: "Oops...",
-      text: "No ingresaste todos los datos requeridos!",
+      text: "No es posible ingresar esta meta",
     });
   }
   saveInLocalStorage(goals, "save");
@@ -165,40 +167,61 @@ function saveGoal() {
   saveInLocalStorage(aimsMonth, "saveAims");
 }
 //Imprime tarjeta de metas
-function print(array) {
+
+function print(array, type) {
   let board = document.getElementById("board");
   board.innerHTML = "";
-  let boxTitle = document.createElement("div");
-  boxTitle.innerHTML = `<h5>Estas son tus metas actuales</h5>
-  <div class="form-floating col-3"><select
-    id="floatingSelect"
-    aria-label="Floating label select example"
-  >
-    <option selected>Filtra tu tablero</option>
-    <option value="todos" id="todos">Todos</option>
-    <option value="crecimientoPersonal" id="crecimientoPersonal">
-      Crecimiento Personal
-    </option>
-    <option value="economia" id="economia">Economía</option>
-    <option value="laboral" id="laboral">Laboral</option>
-    <option value="social" id="social">Social</option>
-  </select>
-  </div>`;
-  board.appendChild(boxTitle);
 
-  array.forEach((elemento) => {
-    let box = document.createElement("div");
-    box.id = "boxGoals";
-    box.className = "col";
-    box.innerHTML = `<div class="card col" style="width: 8rem">
-    <img src=${elemento.imgVision} class="card-img-top" alt=${elemento.valueVision}>
-    <div class="card-body">
-      <h6 class="card-title">${elemento.valueVision}</h6>
-      <p class="card-text">Categoria: ${elemento.tittle}</p>
-    </div>
-  </div>`;
-    board.appendChild(box);
-  });
+  let container = document.createElement("div");
+  container.id = "container"; // Agregar ID al contenedor principal
+
+  let condition;
+  if (type == "template1") {
+    container.classList.add("template1"); // Agregar clase al contenedor principal
+    condition = 6;
+  } else {
+    container.classList.add("template2"); // Agregar clase al contenedor principal
+    condition = 4;
+  }
+
+  let i = 0;
+  while (i < condition) {
+    if (array[i]) {
+      let box = document.createElement("div");
+      box.className = "boxGoals";
+      box.className += ` box-${i}`;
+      box.innerHTML = `<div class="container-goal">
+        <img class="img-goal" src=${array[i].imgVision} alt=${array[i].valueVision}/>
+        <div class="container-info-goal">
+          <div class="info-goal">
+            <p><strong>Meta: </strong> ${array[i].valueVision}</p>
+            <p><strong>Categoría:</strong> ${array[i].tittle}</p>
+            <p><strong>Mes:</strong> ${array[i].dateGoal}</p>
+          </div>
+          <img src="src/public/assets/trashIcon.png" class="delete-goal" id=${i} width={10} height={10} />
+        </div>
+      </div>`;
+
+      container.appendChild(box);
+    } else {
+      let box = document.createElement("div");
+      box.className = "boxGoals";
+      box.className += ` box-${i}`;
+      box.innerHTML = `<button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#create"
+        id="createGoal"
+      >   +  </button>    `;
+
+      container.appendChild(box);
+    }
+
+    i++;
+
+    board.appendChild(container);
+  }
 
   let divButton = document.createElement("div");
   divButton.innerHTML = `<button id="deleteVisionBoard" class="btn btn-primary">Limpiar Vision Board</button>`;
@@ -208,25 +231,22 @@ function print(array) {
   let deleteVisionBoard = document
     .getElementById("deleteVisionBoard")
     .addEventListener("click", () => deleteBoard());
-  document.getElementById("goalsForm").reset();
-  initFiltro();
+  /* document.getElementById("goalsForm").reset(); */
+
+  initDeleteButtons(array, type);
 }
-//Crea filtro y agrega evento
-function initFiltro() {
-  const filtro = document.getElementById("floatingSelect");
-  filtro.addEventListener("change", function (option) {
-    if (option.target.value == "todos") {
-      print(goals);
-    } else {
-      let filtrados = goals.filter(
-        (elemento) => elemento.category == option.target.value
-      );
-      if (filtrados.length === 0) {
-        Swal.fire("No hay elementos aún en esta categoría!");
-      }
-      print(filtrados);
-    }
-  });
+
+
+function initDeleteButtons(array, type) {
+  let deleteButtons = document.getElementsByClassName("delete-goal");
+  for (const button of deleteButtons) {
+    button.addEventListener("click", (e) => {
+      goals.splice(parseInt(e.target.id), 1);
+      console.log(goals);
+      saveInLocalStorage(goals, "save");
+      print(array, type);
+    });
+  }
 }
 
 //Borrar todo el tablero
@@ -452,5 +472,20 @@ function printTask(id) {
     }
   });
 }
+
+const createBoard = () => {
+  document.getElementById("createBoard").addEventListener("click", function () {
+    const templates = document.getElementById("boardTemplate");
+    templates.classList.toggle("show");
+  });
+
+  const imgTemplates = document.getElementsByClassName("imgTemplate");
+  console.log(imgTemplates);
+  for (const img of imgTemplates) {
+    img.addEventListener("click", (e) => {
+      print(goals, e.target.id);
+    });
+  }
+};
 
 initialize();
