@@ -98,29 +98,38 @@ function recorrer(e, inputsCategories, validation) {
 const drawInputsAddAims = () => {
   let containerCreateAims = document.getElementById("aims-goals-form");
   let divAims = document.createElement("div");
-  divAims.innerHTML = `<select
-  class="form-select monthSelect"
-  id="monthSelect-${aimsMonth.length || 0}"
-  aria-label="Floating label select example"
->
-  <option selected>Selecciona un mes</option>
-  <option value="enero" id="enero">Enero</option>
-  <option value="febrero" id="febrero">Febrero</option>
-  <option value="marzo" id="marzo">Marzo</option>
-  <option value="abril" id="abril">Abril</option>
-  <option value="mayo" id="mayo">Mayo</option>
-  <option value="junio" id="junio">Junio</option>
-  <option value="julio" id="julio">Julio</option>
-  <option value="agosto" id="agosto">Agosto</option>
-  <option value="septiembre" id="septiembre">Septiembre</option>
-  <option value="octubre" id="octubre">Octubre</option>
-  <option value="noviembre" id="noviembre">Noviembre</option>
-  <option value="diciembre" id="diciembre">Diciembre</option>
-</select>
-<label for="aim">Objetivo para este mes</label>
-<input type="text" id="aim-${
+
+  let selectHTML = `<select class="form-select monthSelect" id="monthSelect-${
     aimsMonth.length || 0
-  }" class="aim" value="" placeholder="4 horas semanales de inglés" disabled/>`;
+  }" aria-label="Floating label select example">`;
+  selectHTML += `<option selected>Selecciona un mes</option>`;
+
+  const months = [
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
+    "agosto",
+    "septiembre",
+    "octubre",
+    "noviembre",
+    "diciembre",
+  ];
+  months.forEach((month, index) => {
+    selectHTML += `<option value="${month}" id="${month}">${
+      month.charAt(0).toUpperCase() + month.slice(1)
+    }</option>`;
+  });
+  selectHTML += `</select>`;
+
+  divAims.innerHTML =
+    selectHTML +
+    `<label for="aim">Objetivo para este mes</label><input type="text" id="aim-${
+      aimsMonth.length || 0
+    }" class="aim" value="" placeholder="4 horas semanales de inglés" disabled/>`;
   containerCreateAims.appendChild(divAims);
 
   document
@@ -236,7 +245,6 @@ function print(array, type) {
   initDeleteButtons(array, type);
 }
 
-
 function initDeleteButtons(array, type) {
   let deleteButtons = document.getElementsByClassName("delete-goal");
   for (const button of deleteButtons) {
@@ -267,20 +275,30 @@ function printMonths(months) {
     let card = document.createElement("div");
     card.classList = "cardMonth col-2 ";
     card.id = months[i].id;
-    card.innerHTML = `<div class="card-header"> ${months[i].text}</div>`;
+    let abbreviatedMonth = months[i].text.substring(0, 3);
+    card.innerHTML = `<div class="card-header" id=${months[i].id} > ${abbreviatedMonth}</div>`;
+    
     container.appendChild(card);
   }
   let divsMonths = document.getElementsByClassName("cardMonth");
+
   for (let div of divsMonths) {
-    div.addEventListener("click", (e) => seeMonth(e));
+    div.addEventListener("click", (e) => seeMonth(e, divsMonths));
   }
 }
 function saveInLocalStorage(array, name) {
   let saveInfo = JSON.stringify(array);
   localStorage.setItem(name, saveInfo);
 }
-//Imprime barra lateral según el mes seleccionado
-function seeMonth(e) {
+
+//Función que imprime barra lateral según el mes seleccionado
+function seeMonth(e, divsMonths) {
+  for (let div of divsMonths) {
+    div.classList.remove("active");
+  }
+  let selectMonth = document.getElementById(e.target.id);
+  selectMonth.classList.toggle("active");
+
   let container = document.getElementById("sideBar");
   container.innerHTML = "";
   let id = e.target.id;
