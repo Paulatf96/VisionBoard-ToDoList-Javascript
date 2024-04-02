@@ -350,7 +350,7 @@ function seeMonth(e, divsMonths) {
   <div id="tasks">
     <div class="cardWeek">
       <div class="cardTitle">
-        <h5>Semana 1</h5>
+        <h5>Semana 1   </h5>
         <button id="1" class="buttonTaks">+</button>
         </div>
         <div id="semanaTask1"></div>

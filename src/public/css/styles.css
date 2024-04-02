@@ -2,55 +2,24 @@ body {
     font-family: 'Montserrat', sans-serif;
     font-weight:600;
     min-height: 100vh;
-}
-header{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+    padding: 0px !important;
+    margin: 0px !important;
 }
 
 main{
     height: calc(100vh - 80px)
 }
 
-#headerLogo{
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-
-}
-.headerGoals{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-}
-
-header #headerLogo img,header#headerLogo button{
-    width: 30%;
-    margin-right: 20px;
-}
-
-
 h2{
-    color:#17c2e0;
+    color:#5356FF;
     font-weight: bolder;
     margin: 20px;
     font-size: 1.5em;
 }
 h3, h5, h6{
-    color:#17c2e0;
+    color:#378CE7;
     font-weight: bolder;
     margin: 5px 20px 5px 0px;
-}
-
-body div #carouselExampleSlidesOnly{
-    width: 50%;
-    margin-left: 20%;
-}
-#board > h3, #plannerBoard > h3{
-    text-align: center;
 }
 
 .container-button{
@@ -59,8 +28,9 @@ body div #carouselExampleSlidesOnly{
     justify-content: center;
     margin-top: 20px;
 }
-#createGoal, #createAims, #button-collapse, #deleteVisionBoard, #buttonDelete, #aboutButton,#saveGoal,#saveAim, .cardWeek button, #addAims-goalsForm, #aboutButton{
-    background-color:#17c2e0;
+
+#createGoal, #createAims, #button-collapse, #deleteVisionBoard, #buttonDelete,#saveGoal,#saveAim, .cardWeek button, #addAims-goalsForm, #aboutButton, #createBoard{
+    background-color:#5356FF;
     font-weight: 800;
     border-radius: 10px;
     border: none;
@@ -74,7 +44,15 @@ body div #carouselExampleSlidesOnly{
 #saveGoal, #saveAim, #createGoal {
     height: 39px;
 }
-
+#buttonTaks{
+    border: 50%;
+    height: fit-content;
+}
+#aimsOfMonth p{
+    margin: 10px;
+    text-align: center;
+    padding: 10px;
+}
 #board{
     min-height: 75%;
 }
@@ -85,7 +63,7 @@ body div #carouselExampleSlidesOnly{
 .cardMonth {
     display: flex;
     flex-direction: column;
-    background: #17c2e0;
+    background: #5356FF;
     width: 60px;
     height: 60px;
     margin: 5px;
@@ -99,7 +77,7 @@ body div #carouselExampleSlidesOnly{
 }
 
 .cardMonth:hover, .active{
-    background-color: #148ea3;
+    background-color: #378CE7;
     transition: background-color 0.3s;
 }
 .goalsForm{
@@ -135,7 +113,6 @@ body div #carouselExampleSlidesOnly{
 input.categoria, input.categoriaT {display:none;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2)}
     
-    
 input:checked + label {
         background: rgb(255,255,255);
         background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(77,209,200,0.4545454545454546) 92%);
@@ -146,6 +123,7 @@ input:checked + label {
 div .container-inputs{
         justify-content: center;
 }
+
 .cardWeek{
     display: flex;
     flex-direction: column;
@@ -154,40 +132,44 @@ div .container-inputs{
     height: fit-content;
     padding: 5px;
 }
+
 #exampleModal > div > div > div.modal-body > div.goalsForm{
     display: flex;
     flex-direction: row;
     justify-content:space-between ;
 }
-/* .cardTitle{
-    display: flex;
-    border: 0.5px solid #17c2e0 ;
-    border-radius: 10px;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2px 20px 2px 20px;
-}
 
-.card-body h6 {
-    margin-bottom: 0px;
-    font-weight: bolder;
-    font-size: 1rem;
-    margin: 2px;
-}
-.card-body{
-    padding: 5px;
-}
-.card-text{
-    font-size: 0.8rem;
-} */
 #board{
     padding: 20px;
     margin-bottom: 10px;
+    justify-content: center;
+}
+
+#board p{
+    text-align: center;
+    padding: 15px;
+    font-size: 1.2rem;
+}
+
+#boardTemplate{
+    display: contents;
 }
 #sideBar{
-    border-left: 0.5px solid rgb(218, 215, 215);
+    background-color: #DFF5FF;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
+#sideBar img{
+    height: 25%
+}
+
+.cardTitle{
+    display: flex;
+    align-items: center;
+}
+
 
 #semana1 .listTaks, #semana2 .listTaks, #semana3 .listTaks, #semana4 .listTaks{
     display: flex;
@@ -200,8 +182,8 @@ div .container-inputs{
     flex: 1;
     flex-wrap: wrap;
 }
-
-.board-template{
+/* Estilos para desplegable de crear tablero*/
+/* .board-template{
     display: none;
     width:fit-content ;
   position: fixed;
@@ -211,12 +193,16 @@ div .container-inputs{
   z-index: 1000; 
   background-color: rgba(208, 240, 237, 0.5);
   border-radius: 5px;
-}
+} */
 
-.show {
+/* .show {
     display: flex;
     justify-content:center ;
     align-items: center;
+} */
+
+#empty-board{
+width: 40%;
 }
 
 .template {
@@ -233,6 +219,7 @@ div .container-inputs{
 .template img:hover {
    transform: scale(1.1);
    transition: initial;
+   border: #378CE7 solid;
 }
 
 /* Estilos para Templates del board */
@@ -308,6 +295,7 @@ div .container-inputs{
     grid-row: 2 / span 2; 
   }
 
+/* Estilos para tarjetas board*/
 .container-info-goal{
     display: none;
     
@@ -338,7 +326,7 @@ display: flex;
 }
 
 .delete-goal:hover{
-    background-color: #17c2e0;
+    background-color: #378CE7;
     border-radius: 50%;
 }
 
@@ -347,7 +335,3 @@ display: flex;
     transform: scale(1.02);
     transition: transform 1s ease;
 }
-  
-  
-
-  
